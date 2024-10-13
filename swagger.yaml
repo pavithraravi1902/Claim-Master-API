@@ -1,0 +1,317 @@
+swagger: "2.0"
+info:
+  description: "API for managing claims and processing metrics."
+  version: "1.0.0"
+  title: "Claims Management API"
+host: "localhost:5000"  # Change to your production host if needed
+basePath: "/"
+schemes:
+  - "http"
+paths:
+  /test-insert:
+    post:
+      summary: "Insert test claims and calculate metrics."
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "Claims inserted and metrics calculated."
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+        500:
+          description: "Error occurred while inserting claims."
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+    
+  /active-claims:
+    get:
+      summary: "Retrieve active claims."
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "List of active claims."
+          schema:
+            type: "object"
+            properties:
+              active_claims:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "integer"
+                    g_loss:
+                      type: "string"
+                    stage_name:
+                      type: "string"
+                    stage_date:
+                      type: "string"
+                      format: "date-time"
+                    t_clm_nbr:
+                      type: "string"
+                    c_lob:
+                      type: "string"
+                    claims_pending:
+                      type: "integer"
+                    sla_breached:
+                      type: "integer"
+                    time_taken:
+                      type: "integer"
+                    region:
+                      type: "string"
+              pending_claim_count:
+                type: "integer"
+              sla_breached_count:
+                type: "integer"
+        500:
+          description: "Error occurred while retrieving active claims."
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+
+  /claims:
+    get:
+      summary: "Retrieve all claims."
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "List of all claims."
+          schema:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                id:
+                  type: "integer"
+                g_loss:
+                  type: "string"
+                stage_name:
+                  type: "string"
+                stage_seq:
+                  type: "integer"
+                stage_date:
+                  type: "string"
+                  format: "date-time"
+                t_clm_nbr:
+                  type: "string"
+                c_lob:
+                  type: "string"
+                c_lob_ctgry:
+                  type: "string"
+                market_segment:
+                  type: "string"
+                input_method:
+                  type: "string"
+                aim_office:
+                  type: "string"
+                claim_owner:
+                  type: "string"
+                claim_supervisor:
+                  type: "string"
+                time_taken:
+                  type: "integer"
+                claims_pending:
+                  type: "integer"
+                sla_breached:
+                  type: "integer"
+                processing_time_today:
+                  type: "integer"
+                processing_time_avg:
+                  type: "integer"
+                claims_processed_today:
+                  type: "integer"
+                claims_processed_month_to_date:
+                  type: "integer"
+                total_claims:
+                  type: "integer"
+                sla_met:
+                  type: "integer"
+                abandoned:
+                  type: "integer"
+                region:
+                  type: "string"
+
+  /average-processing-time:
+    get:
+      summary: "Get average processing times."
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "Average processing times data."
+          schema:
+            type: "object"
+            properties:
+              today_average_processing_time:
+                type: "number"
+                format: "float"
+              month_average_processing_time:
+                type: "number"
+                format: "float"
+              lob_average_processing_time:
+                type: "object"
+                additionalProperties:
+                  type: "number"
+                  format: "float"
+              region_average_processing_time:
+                type: "object"
+                additionalProperties:
+                  type: "number"
+                  format: "float"
+        500:
+          description: "Error occurred while retrieving average processing times."
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+
+  /claims-processed-count:
+    get:
+      summary: "Retrieve claims processed count."
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "Counts of claims processed."
+          schema:
+            type: "object"
+            properties:
+              today_processed_count:
+                type: "integer"
+              yesterday_processed_count:
+                type: "integer"
+              month_to_date_processed_count:
+                type: "integer"
+              quarter_to_date_processed_count:
+                type: "integer"
+        500:
+          description: "Error occurred while retrieving claims processed count."
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+
+  /current-month-status:
+    get:
+      summary: "Get current month status."
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "Current month claims status."
+          schema:
+            type: "object"
+            properties:
+              total_claims:
+                type: "integer"
+              sla_met:
+                type: "integer"
+              sla_breached:
+                type: "integer"
+              abandoned:
+                type: "integer"
+        500:
+          description: "Error occurred while retrieving current month status."
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+
+  /lob-average-processing-time:
+    get:
+      summary: "Get LOB average processing time."
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "LOB average processing time data."
+          schema:
+            type: "object"
+            properties:
+              monthwise_average:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    lob:
+                      type: "string"
+                    year:
+                      type: "integer"
+                    month:
+                      type: "integer"
+                    avg_time:
+                      type: "number"
+                      format: "float"
+              yearwise_average:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    lob:
+                      type: "string"
+                    year:
+                      type: "integer"
+                    avg_time:
+                      type: "number"
+                      format: "float"
+        500:
+          description: "Error occurred while retrieving LOB average processing time."
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+
+  /gpt-prompt:
+    post:
+      summary: "Generate text using GPT-2 model."
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: "object"
+            properties:
+              input:
+                type: "string"
+      responses:
+        200:
+          description: "Generated text response."
+          schema:
+            type: "object"
+            properties:
+              generated_text:
+                type: "string"
+        400:
+          description: "No input text provided."
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+        500:
+          description: "Error occurred during text generation."
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
